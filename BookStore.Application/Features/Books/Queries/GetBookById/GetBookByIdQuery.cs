@@ -1,28 +1,28 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MediatR;
+using MediatR; 
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entities;
 
-namespace BookStore.Application.Feature.Authors.Queries
+namespace BookStore.Application.Features.Books.Queries.GetBookById
 {
-    public class GetAuthorsByIdQuery : IRequest<Author?>
+    public class GetBookByIdQuery : IRequest<Book?>
     {
         public int Id { get; set; }
     }
 
     // Dinh nghia Handler cho GetAuthorsByIdQuery
-    public class GetAuthorsByIdQueryHandler : IRequestHandler<GetAuthorsByIdQuery, Author?>
-    { 
+    public class GetBookByIdQueryHandler : IRequestHandler<GetBookByIdQuery, Book?>
+    {
         private readonly IApplicationDbContext _context;
 
-        public GetAuthorsByIdQueryHandler(IApplicationDbContext context)
+        public GetBookByIdQueryHandler(IApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task<Author?> Handle(GetAuthorsByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Book?> Handle(GetBookByIdQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Authors
+            return await _context.Books
                                .FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
         }
     }

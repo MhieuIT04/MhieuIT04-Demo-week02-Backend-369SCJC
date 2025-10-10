@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entities;
 
-namespace BookStore.Application.Feature.Authors.Queries
+namespace BookStore.Application.Features.Authors.Queries.GetAllAuthors
 {
     public class GetAllAuthorsQuery : IRequest<IEnumerable<Author>>
     {

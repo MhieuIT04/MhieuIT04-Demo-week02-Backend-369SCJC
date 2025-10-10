@@ -6,7 +6,6 @@ namespace BookStore.Domain.Entities
     {
         [Key]
        
-
         public int Id { get; set; }
         [Required]
         [StringLength(50)]

@@ -2,20 +2,21 @@
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entities;
 
-namespace BookStore.Application.Feature.Authors.Commands
+namespace BookStore.Application.Features.Authors.Commands.DeleteAuthor
 {
-    public class DeleteAuthors : IRequest<bool>
+    public class DeleteAuthorCommand : IRequest<bool>
     {
         public int Id { get; set; }
     }
-    public  class DeleteAuthorsHandler : IRequestHandler<DeleteAuthors, bool>
+    // Dinh nghia Handler cho DeleteAuthorCommand
+    public class DeleteAuthorsHandler : IRequestHandler<DeleteAuthorCommand, bool>
     {
         private readonly IApplicationDbContext _context;
         public DeleteAuthorsHandler(IApplicationDbContext context)
         {
             _context = context;
         }
-        public async Task<bool> Handle(DeleteAuthors request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteAuthorCommand request, CancellationToken cancellationToken)
         {
             var entity = await _context.Authors.FindAsync(new object[] { request.Id }, cancellationToken);
             if (entity == null)

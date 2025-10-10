@@ -18,6 +18,7 @@ namespace BookStore.Data
         {
             base.OnModelCreating(modelBuilder);
             // Fluent API configurations can go here if needed
+
         }
     }
 }

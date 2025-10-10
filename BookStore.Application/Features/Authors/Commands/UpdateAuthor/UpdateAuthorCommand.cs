@@ -2,22 +2,22 @@
 using BookStore.Application.Interfaces;
 using BookStore.Domain.Entities;
 
-namespace BookStore.Application.Feature.Authors.Commands
+namespace BookStore.Application.Features.Authors.Commands.UpdateAuthor
 {
-    public class UpdateAuthors : IRequest<Author?>
+    public class UpdateAuthorCommand : IRequest<Author?>
     {
         public int Id { get; set; }
         public string Name { get; set; }
     }
     // Dinh nghia Handler cho UpdateAuthors
-    public class UpdateAuthorsHandler : IRequestHandler<UpdateAuthors, Author?>
+    public class UpdateAuthorsHandler : IRequestHandler<UpdateAuthorCommand, Author?>
     {
         private readonly IApplicationDbContext _context;
         public UpdateAuthorsHandler(IApplicationDbContext context)
         {
             _context = context;
         }
-        public async Task<Author?> Handle(UpdateAuthors request, CancellationToken cancellationToken)
+        public async Task<Author?> Handle(UpdateAuthorCommand request, CancellationToken cancellationToken)
         {
             var author = await _context.Authors.FindAsync(new object[] { request.Id }, cancellationToken);
             if (author == null)

@@ -1,8 +1,8 @@
-﻿    using MediatR;
-    using BookStore.Application.Interfaces;
-    using BookStore.Domain.Entities;
+﻿using MediatR;
+using BookStore.Application.Interfaces;
+using BookStore.Domain.Entities;
 
-    namespace BookStore.Application.Feature.Authors.Commands
+namespace BookStore.Application.Features.Authors.Commands.CreateAuthor
     {
         public class CreateAuthors : IRequest<Author>
         {
