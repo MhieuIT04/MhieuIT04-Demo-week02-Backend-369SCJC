@@ -1,16 +1,20 @@
-﻿using BookStore.Data; // Đây là namespace của ApplicationDbContext
-// Dòng 'using' này dùng để lấy class GetAllAuthorsQuery làm mốc cho MediatR
-//using BookStore.Application.Feature.Authors.Queries.GetAllAuthorsQuery;
+﻿using BookStore.Data; // <<< SỬA LẠI NAMESPACE CHO ĐÚNG
+using BookStore.Application.Features.Authors.Queries.GetAllAuthors;
 using BookStore.Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using BookStore.Application.Features.Authors.Queries.GetAllAuthors;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // === ĐĂNG KÝ SERVICES VÀO CONTAINER ===
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // Cấu hình để xử lý các vòng lặp tham chiếu
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -18,10 +22,22 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
+// Đảm bảo ApplicationDbContext đã implement IApplicationDbContext
 builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
-// === ĐÂY LÀ DÒNG SỬA LỖI QUAN TRỌNG NHẤT ===
-// Đăng ký MediatR với cú pháp của phiên bản 12+
+// Đăng ký CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ReactAppPolicy",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
+// Đăng ký MediatR
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(GetAllAuthorsQuery).Assembly));
 
@@ -37,6 +53,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// === DI CHUYỂN UseCors LÊN TRÊN ĐỂ ĐẢM BẢO ƯU TIÊN ===
+// Thứ tự đúng: Routing -> CORS -> Auth
+app.UseRouting(); // Thêm dòng này để định nghĩa rõ ràng pipeline
+
+app.UseCors("ReactAppPolicy");
 
 app.UseAuthorization();
 
